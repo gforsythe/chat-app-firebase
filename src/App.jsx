@@ -1,5 +1,5 @@
 import { Switch, BrowserRouter } from 'react-router-dom';
-
+import React from 'react';
 import 'rsuite/dist/styles/rsuite-default.css';
 import './styles/main.scss';
 import PrivateRoute from './components/PrivateRoute';
@@ -11,7 +11,7 @@ function App() {
   return (
     <BrowserRouter>
       <Switch>
-        <PublicRoute path="/signin">SignIn
+        <PublicRoute path="/signin"> Sign In Page Bro
           <SignIn />
         </PublicRoute>
         <PrivateRoute path="/">
