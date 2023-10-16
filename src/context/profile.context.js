@@ -39,7 +39,7 @@ export const ProfileProvider = ({ children }) => {
     return () => {
       authUnsubscribe();
       if(userRef){
-        userRef.off()
+        userRef.off();
       }
 
     };
