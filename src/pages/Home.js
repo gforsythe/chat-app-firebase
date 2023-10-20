@@ -6,7 +6,7 @@ const Home = () => {
     <Grid fluid className="h-100">
       <Row>
         <Col xs={24} md={8} >
-          <Sidebar/>
+          <Sidebar/> 
         </Col>
       </Row>
 
