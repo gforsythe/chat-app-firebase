@@ -18,10 +18,11 @@ export const ProfileProvider = ({ children }) => {
        userRef =  db.ref(`/profiles/${authObj.uid}`);
        
        userRef.on('value', (snapshot) => {
-          const { name, createdAt } = snapshot.val();
+          const { name, createdAt, avatar} = snapshot.val();
           const dataOfUser = {
             name,
             createdAt,
+            avatar,
             uid: authObj.uid,
             email: authObj.email,
           };
