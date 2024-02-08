@@ -7,3 +7,8 @@ export function getNameInitials(name) {
   return spiltName[0][0];
 }
 
+export function  transformToArrayWithId(snapshotValue){
+  return snapshotValue ? Object.keys(snapshotValue).map(roomId =>{
+    return {...snapshotValue[roomId], id:roomId}
+  }) : []
+}
