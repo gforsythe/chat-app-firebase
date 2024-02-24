@@ -9,7 +9,7 @@ import { db } from "../../../misc/firebase";
 
 function assembleMessage(profile, chatId) {
   return {
-    roomID: chatId,
+    roomId: chatId,
     author: {
       name: profile.name,
       uid: profile.uid,
