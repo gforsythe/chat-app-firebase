@@ -1,4 +1,4 @@
-import React, { useCallback } from 'react'
+import { useCallback } from 'react'
 import { Alert, Button, Drawer, Icon } from 'rsuite';
 import { useMediaQuery, useModalState } from '../../misc/custom-hooks';
 import Dashboard from '.';

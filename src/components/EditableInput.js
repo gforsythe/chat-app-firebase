@@ -1,4 +1,4 @@
-import React, { useCallback, useState } from 'react';
+import { useCallback, useState } from 'react';
 import { Icon, Input, InputGroup } from 'rsuite';
 
 function EditableInput({ initalValue, onSave, label = null, placeholder = "write your value", emptyMsg = "input is empty", ...inputProps }) {
