@@ -4,11 +4,15 @@ import { Alert, Button, Icon, Tag } from 'rsuite';
 import firebase from 'firebase/app';
 
 function ProviderBlock() {
-  const [isConnected, setIsConnected] = useState({
-    "google.com": auth.currentUser.providerData.some(
-      (data) => data.providerId === "google.com"),
-    "facebook.com": auth.currentUser.providerData.some(
-      (data) => data.providerId === "facebook.com")
+  const [isConnected, setIsConnected] = useState(() => {
+    const currentUser = auth.currentUser;
+    return {
+      "google.com": currentUser ? currentUser.providerData.some(
+        (data) => data.providerId === "google.com") : false,
+      "facebook.com": currentUser ? currentUser.providerData.some(
+        (data) => data.providerId === "facebook.com") : false
+    };
+
   });
 
   //general listener for updating the provider info
@@ -46,20 +50,20 @@ function ProviderBlock() {
   //general link for both providers
   const link = async (provider) => {
     try {
-     await auth.currentUser.linkWithPopup(provider)
-     Alert.info(`Linked with ${provider.providerId}`, 4000)
-     updateIsConnected(provider.providerId, true)
+      await auth.currentUser.linkWithPopup(provider);
+      Alert.info(`Linked with ${provider.providerId}`, 4000);
+      updateIsConnected(provider.providerId, true);
     } catch (error) {
-      Alert.error(error.message, 4000)
+      Alert.error(error.message, 4000);
     }
   };
 
   const linkFacebook = () => {
-    link( new firebase.auth.FacebookAuthProvider())
+    link(new firebase.auth.FacebookAuthProvider());
   };
   const linkGoogle = () => {
-    link(new firebase.auth.GoogleAuthProvider())
-    
+    link(new firebase.auth.GoogleAuthProvider());
+
 
   };
   return (
