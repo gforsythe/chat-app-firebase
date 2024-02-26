@@ -1,5 +1,22 @@
 import { createContext, useContext, useEffect, useState } from "react";
 import { auth, db } from "../misc/firebase";
+import firebase from "firebase/app";
+
+
+
+
+
+
+export const isOfflineForDatabase = {
+  state: 'offline',
+  last_changed: firebase.database.ServerValue.TIMESTAMP,
+};
+
+const isOnlineForDatabase = {
+  state: 'online',
+  last_changed: firebase.database.ServerValue.TIMESTAMP,
+};
+
 
 const ProfileContext = createContext();
 
@@ -12,13 +29,15 @@ export const ProfileProvider = ({ children }) => {
 
   useEffect(() => {
     let userRef;
+    let userStatusRef;
     const authUnsubscribe = auth.onAuthStateChanged(authObj => {
       if (authObj) {
+        userStatusRef = db.ref(`/status/${authObj.uid}`);
 
-       userRef =  db.ref(`/profiles/${authObj.uid}`);
-       
-       userRef.on('value', (snapshot) => {
-          const { name, createdAt, avatar} = snapshot.val();
+        userRef = db.ref(`/profiles/${authObj.uid}`);
+
+        userRef.on('value', (snapshot) => {
+          const { name, createdAt, avatar } = snapshot.val();
           const dataOfUser = {
             name,
             createdAt,
@@ -29,18 +48,38 @@ export const ProfileProvider = ({ children }) => {
           setProfile(dataOfUser);
           setIsLoading(false);
         });
+
+        db.ref('.info/connected').on('value', (snapshot) => {
+          if (!!snapshot.val() === false) {
+            return;
+          };
+
+          userStatusRef.onDisconnect().set(isOfflineForDatabase).then(() => {
+            userStatusRef.set(isOnlineForDatabase);
+          });
+        });
+
       } else {
-        if(userRef){
+        if (userRef) {
           userRef.off();
         }
+        if (userStatusRef) {
+          userStatusRef.off();
+        }
+        db.ref('.info/connected').off()
         setProfile(null);
         setIsLoading(false);
       }
     });
     return () => {
       authUnsubscribe();
-      if(userRef){
+      db.ref('.info/connected').off()
+
+      if (userRef) {
         userRef.off();
+      }
+      if (userStatusRef) {
+        userStatusRef.off();
       }
 
     };

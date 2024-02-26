@@ -13,7 +13,8 @@
     "react-scripts": "5.0.1",
     "rsuite": "^4.10.2",
     "sass": "^1.67.0",
-    "timeago-react": "^3.0.6"
+    "timeago-react": "^3.0.6",
+    "use-context-selector": "^1.4.1"
   },
   "scripts": {
     "start": "DISABLE_ESLINT_PLUGIN=true react-scripts start",
@@ -43,6 +44,7 @@
   },
   "devDependencies": {
     "@babel/preset-env": "^7.22.20",
+    "@types/react-router": "^5.1.20",
     "babel-eslint": "^10.1.0",
     "eslint": "^8.27.0",
     "eslint-config-airbnb": "^19.0.4",

@@ -5,6 +5,7 @@ import AvatarEditor from "react-avatar-editor";
 import { db, storage } from "../../misc/firebase";
 import { useProfileHook } from "../../context/profile.context";
 import ProfileAvatar from "../ProfileAvatar";
+import { getUserUpdates } from "../../misc/helpers";
 
 const fileInputTypes = ".png, .jpeg, .jpg";
 const acceptedFileTypes = ['image/png', 'image/jpeg', 'image/pjpeg'];
@@ -52,8 +53,13 @@ function AvatarUploadBtn() {
         cacheControl: `public, max-age-${3600 * 24 * 3}`
       });
       const downloadUrl = await uploadAvatarResult.ref.getDownloadURL();
-      const userAvatarRef = db.ref(`/profiles/${profile.uid}`).child('avatar');
-      userAvatarRef.set(downloadUrl);
+
+      const updates = await getUserUpdates(profile.uid, 'avatar', downloadUrl, db);
+      await db.ref().update(updates);
+
+      // old way updated on line 57
+      // const userAvatarRef = db.ref(`/profiles/${profile.uid}`).child('avatar');
+     // userAvatarRef.set(downloadUrl);
       setIsLoading(false);
       Alert.info('Avatar has been uploaded', 4000);
     } catch (error) {
