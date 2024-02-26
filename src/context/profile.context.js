@@ -50,7 +50,7 @@ export const ProfileProvider = ({ children }) => {
         });
 
         db.ref('.info/connected').on('value', (snapshot) => {
-          if (snapshot.val() === false) {
+          if (!!snapshot.val() === false) {
             return;
           };
 
