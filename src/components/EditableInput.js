@@ -1,7 +1,7 @@
 import { useCallback, useState } from 'react';
 import { Icon, Input, InputGroup } from 'rsuite';
 
-function EditableInput({ initalValue, onSave, label = null, placeholder = "write your value", emptyMsg = "input is empty", ...inputProps }) {
+function EditableInput({ initalValue, onSave, label = null, placeholder = "write your value", emptyMsg = "input is empty", wrapperClassName = "", ...inputProps }) {
 
   const [input, setInput] = useState(initalValue);
   const [isEditable, setEditable] = useState(false);
@@ -28,7 +28,7 @@ const onSaveClick = async () => {
 }
 
   return (
-    <div>
+    <div className={wrapperClassName}>
       {label}
       <InputGroup>
       <Input {...inputProps} disabled={!isEditable} placeholder={placeholder} value={input} onChange={onInputChange} />
