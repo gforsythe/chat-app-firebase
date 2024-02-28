@@ -2,11 +2,13 @@ import TimeAgo from "timeago-react";
 import ProfileAvatar from "../../ProfileAvatar";
 import ProfileInfoBtnModal from "./ProfileInfoBtnModal";
 import PresenceDot from "../../PresenceDot";
+import { useHover } from "../../../misc/custom-hooks";
 
 const  MessageItem = ({message}) => {
   const {author, createdAt, text} = message;
+  const [selfRef, isHovered] = useHover()
   return (
-    <li className="padded mb-1">
+    <li className={`padded mb-1 cursor-pointer ${isHovered ? 'bg-black-02':''}`} ref={selfRef}>
       <div className="d-flex align-items-center font-bolder mb-1">
         <PresenceDot uid={author.uid}/>
       <ProfileAvatar src={author.avatar} name={author.name} className='ml-1' size="xs"/>
