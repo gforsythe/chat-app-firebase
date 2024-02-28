@@ -2,7 +2,7 @@ import { Alert, Button, ControlLabel, Form, FormControl, FormGroup, Icon, Modal,
 import { useModalState } from "../../misc/custom-hooks";
 import { useCallback, useRef, useState } from "react";
 import firebase from "firebase/app";
-import { db } from "../../misc/firebase";
+import { auth, db } from "../../misc/firebase";
 
 const { StringType } = Schema.Types;
 
@@ -34,14 +34,17 @@ function CreateRoomBtnModal() {
     setIsLoading(true);
     const newRoomData = {
       ...formValue,
-      createdAt: firebase.database.ServerValue.TIMESTAMP
+      createdAt: firebase.database.ServerValue.TIMESTAMP,
+      admins: {
+        [auth.currentUser.uid]: true
+      }
     };
     try {
       await db.ref('rooms').push(newRoomData);
-      Alert.info(`${formValue.name} has been created!`,4000)
+      Alert.info(`${formValue.name} has been created!`, 4000);
       setIsLoading(false);
       setFormValue(INITIAL_FORM);
-      close()
+      close();
     } catch (error) {
       setIsLoading(false);
       Alert.error(error.message, 4000);
