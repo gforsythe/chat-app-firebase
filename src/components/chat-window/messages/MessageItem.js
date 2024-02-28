@@ -1,18 +1,34 @@
 import TimeAgo from "timeago-react";
+import { memo } from "react";
+import { Button } from "rsuite";
 import ProfileAvatar from "../../ProfileAvatar";
 import ProfileInfoBtnModal from "./ProfileInfoBtnModal";
 import PresenceDot from "../../PresenceDot";
 import { useHover } from "../../../misc/custom-hooks";
+import { useCurrentRoom } from "../../../context/current-room.context";
+import { auth } from "../../../misc/firebase";
 
-const  MessageItem = ({message}) => {
+const  MessageItem = ({message, handleAdmin}) => {
   const {author, createdAt, text} = message;
   const [selfRef, isHovered] = useHover()
+  const isAdmin = useCurrentRoom(v => v.isAdmin);
+  const admins = useCurrentRoom(v => v.admins);
+  const isMsgAuthorAdmin = admins.includes(author.uid);
+  const isAuthor = auth.currentUser.uid === author.uid; 
+
+
+  const canGrantAdmin = isAdmin && !isAuthor; 
+
   return (
     <li className={`padded mb-1 cursor-pointer ${isHovered ? 'bg-black-02':''}`} ref={selfRef}>
       <div className="d-flex align-items-center font-bolder mb-1">
         <PresenceDot uid={author.uid}/>
       <ProfileAvatar src={author.avatar} name={author.name} className='ml-1' size="xs"/>
-      <ProfileInfoBtnModal appearence="link" profile={author} className="p-0 ml-1 text-black"/>
+
+      <ProfileInfoBtnModal appearence="link" profile={author} className="p-0 ml-1 text-black">
+        {canGrantAdmin && 
+        <Button block onClick={()=>handleAdmin(author.uid)} color="blue">{isMsgAuthorAdmin ? "Remove Admin Permmision?": "Give Admin For This Room"}</Button>}
+      </ProfileInfoBtnModal>
       <TimeAgo className='font-normal text-black-45 ml-2'
         datetime={createdAt}
         />
@@ -25,4 +41,4 @@ const  MessageItem = ({message}) => {
   )
 }
 
-export default MessageItem
+export default memo(MessageItem)
