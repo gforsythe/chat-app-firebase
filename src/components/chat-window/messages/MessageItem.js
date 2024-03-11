@@ -9,7 +9,7 @@ import PresenceDot from "../../PresenceDot";
 import { useHover, useMediaQuery } from "../../../misc/custom-hooks";
 import { useCurrentRoom } from "../../../context/current-room.context";
 
-const MessageItem = ({ message, handleAdmin, handleLike, }) => {
+const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
   const { author, createdAt, text, likes, likeCount } = message;
   const [selfRef, isHovered] = useHover();
   const isMobile = useMediaQuery(('max-width: 992px'));
@@ -37,6 +37,12 @@ const MessageItem = ({ message, handleAdmin, handleLike, }) => {
         />
         <IconBtnControl {...(isLiked ? { color: "red" } : {})} isVisible={canShowIcons}
           iconName="heart" tooltip="like this message" onClick={() => handleLike(message.id)} badgeContent={likeCount} />
+          {
+            isAuthor && (
+              <IconBtnControl  isVisible={canShowIcons}
+              iconName="close" tooltip="delete this message" onClick={() => handleDelete(message.id)} />
+            )
+          }
       </div>
       <div>
         <span className="word-break-all">{text}</span>
