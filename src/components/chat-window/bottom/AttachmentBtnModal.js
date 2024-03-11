@@ -18,25 +18,25 @@ function AttachmentBtnModal({ afterUpload }) {
 
   const onChange = (fileArr) => {
     const filtered = fileArr.filter(el => el.blobFile.size <= MAX_FILE_SIZE).slice(0, 5);
-    setFileList(filtered);
+    setFileList(filtered); 
   };
 
 
   const onUpload = async () => {
     try {
       const uploadPromises = fileList.map(f => {
-        storage.ref(`/chat/${chatId}`).child(Date.now() + f.name).put(f.blobFile, {
-          cacheControl: `public, max-age-${3600 * 24 * 3}`,
+      return  storage.ref(`/chat/${chatId}`).child(Date.now() + f.name).put(f.blobFile, {
+          cacheControl: `public, max-age=${3600 * 24 * 3}`,
         });
       });
 
       const uploadSnapshots = await Promise.all(uploadPromises);
 
-      const shapePromises = uploadSnapshots.map(async snapshot => {
+      const shapePromises = uploadSnapshots.map(async snap => {
         return {
-          contentType: snapshot.metadata.contentType,
-          name: snapshot.metadata.name,
-          url: await snapshot.ref.getDownloadURL()
+          contentType: snap.metadata.contentType,
+          name: snap.metadata.name,
+          url: await snap.ref.getDownloadURL()
         };
       });
 
