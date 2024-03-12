@@ -19,6 +19,13 @@ const renderFileMsg = (file) => {
           </div>
   }
 
+  if(file.contentType.includes('audio')){
+    return <audio controls>
+      <source src={file.url} type="audio/mp3" />
+      Sorry. Your Browser Does Not Support This Element...
+    </audio>
+  }
+
   return <a href={file.url}>Download{file.name}</a>
 }
 
@@ -53,7 +60,7 @@ const MessageItem = ({ message, handleAdmin, handleLike, handleDelete }) => {
           {
             isAuthor && (
               <IconBtnControl  isVisible={canShowIcons}
-              iconName="close" tooltip="delete this message" onClick={() => handleDelete(message.id)} />
+              iconName="close" tooltip="delete this message" onClick={() => handleDelete(message.id, file)} />
             )
           }
       </div>
