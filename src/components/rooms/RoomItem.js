@@ -9,7 +9,6 @@ function RoomItem({ room }) {
         <h3 className="text-disappear">{name}</h3>
         <TimeAgo className='font-normal text-black-45'
           datetime={lastMessage ? new Date(lastMessage.createdAt) : new Date(createdAt)}
-
         />
       </div>
 
@@ -20,7 +19,7 @@ function RoomItem({ room }) {
               <ProfileAvatar src={lastMessage.author.avatar} name={lastMessage.author.name} size="sm" />
               <div className='text-disappear ml-2'>
                 <div className='italic'>{lastMessage.author.name}</div>
-                <span>{lastMessage.text}</span>
+                <span>{lastMessage.text || lastMessage.file.name}</span>
               </div>
             </div>
           </> : <span>No Messages yet...</span>
