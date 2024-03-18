@@ -14,7 +14,7 @@ function App() {
         <Switch>
           <PublicRoute path="/signin">
             {' '}
-            Sign In Page Bro
+            Welcome to the SignIn Flow!
             <SignIn />
           </PublicRoute>
           <PrivateRoute path="/">
