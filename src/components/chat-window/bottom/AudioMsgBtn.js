@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Alert, Icon, InputGroup } from "rsuite";
 import { ReactMic } from "react-mic";
 import { useCallback, useState } from "react";

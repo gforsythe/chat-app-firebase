@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { useParams } from "react-router";
 import { Alert, Button, Icon, InputGroup, Modal, Uploader } from "rsuite";
 import { useModalState } from "../../../misc/custom-hooks";

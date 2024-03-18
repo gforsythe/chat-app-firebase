@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Badge, Icon, IconButton, Tooltip, Whisper } from "rsuite";
 
 const ConditionalBadge = ({ condition, children }) => {

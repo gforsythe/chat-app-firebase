@@ -1,3 +1,4 @@
+
 import { Divider } from 'rsuite';
 import { useEffect, useRef, useState } from 'react';
 import DashboardToggle from './dashboard/DashboardToggle';
@@ -9,23 +10,20 @@ function Sidebar() {
   const [height, setHeight] = useState(0);
 
   useEffect(() => {
-    if(topSideBarRef.current){
-      setHeight(topSideBarRef.current.scrollHeight)
+    if (topSideBarRef.current) {
+      setHeight(topSideBarRef.current.scrollHeight);
     }
-  
-    
-  }, [topSideBarRef])
-  
+  }, [topSideBarRef]);
 
   return (
-    <div className='h-100 pt-2'>
+    <div className="h-100 pt-2">
       <div ref={topSideBarRef}>
         <DashboardToggle />
         <CreateRoomBtnModal />
         <Divider>Join Conversation</Divider>
       </div>
 
-      <ChatRoomList  aboveElementHeight={height}/>    
+      <ChatRoomList aboveElementHeight={height} />
     </div>
   );
 }

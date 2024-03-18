@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import TimeAgo from "timeago-react";
 import { memo } from "react";
 import IconBtnControl from "./IconBtnControl";

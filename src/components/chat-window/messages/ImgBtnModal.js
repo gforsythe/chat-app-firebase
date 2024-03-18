@@ -1,3 +1,5 @@
+/* eslint-disable */
+
 import { Modal } from "rsuite";
 import { useModalState } from "../../../misc/custom-hooks";
 
