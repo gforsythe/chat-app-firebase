@@ -28,8 +28,11 @@ export const storage = app.storage();
 export const messaging = firebase.messaging.isSupported() ? app.messaging() : null;
 
 if(messaging){
-  messaging.usePublicVapidKey("BOkEK7UF8eBeDCCpDy36wT14sp2FX007G_LDeZyv4gzT0w3Qu7RGdTfvvyVsNQNWO3srXB-vQuMVoml33laSeUg"); 
+  messaging.usePublicVapidKey(process.env.REACT_APP_FIREBASE_CLOUD_API_KEY); 
   messaging.onMessage(data => {
     console.log(data);
   })
+
+  
 }
+

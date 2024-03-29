@@ -56,7 +56,7 @@ export const ProfileProvider = ({ children }) => {
 
 
 
-        if (messaging) {
+        if (messaging && Notification.permission === 'granted') {
           try {
             const currentToken = await messaging.getToken();
             if (currentToken) {
