@@ -4,12 +4,12 @@ importScripts('https://www.gstatic.com/firebasejs/8.10.1/firebase-messaging.js')
 
 
 firebase.initializeApp({
-  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
-  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
-  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
-  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
-  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
-  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
-  appId: process.env.REACT_APP_FIREBASE_APP_ID,
+  apiKey: 'AIzaSyC5Xz0yHmK2UnXvZM63mN4AKAGEYtVZgFU',
+  authDomain: 'chat-web-app-2b863.firebaseapp.com',
+  databaseURL: "https://chat-web-app-2b863-default-rtdb.firebaseio.com",
+  projectId: 'chat-web-app-2b863',
+  storageBucket: 'chat-web-app-2b863.appspot.com',
+  messagingSenderId: '596123577806',
+  appId: '1:596123577806:web:533b9ebd1acf26991ecf9f',
 });
  firebase.messaging();

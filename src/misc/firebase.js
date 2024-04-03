@@ -4,7 +4,6 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import 'firebase/messaging';
-import { getMessaging } from "firebase/messaging";
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -28,11 +27,13 @@ export const storage = app.storage();
 export const messaging = firebase.messaging.isSupported() ? app.messaging() : null;
 
 if(messaging){
-  messaging.usePublicVapidKey(process.env.REACT_APP_FIREBASE_CLOUD_API_KEY); 
-  messaging.onMessage(data => {
-    console.log(data);
-  })
+  messaging.onMessage(({ notification }) => {
+    const { title, body } = notification;
+    Toast.info({ title, description: body, duration: 0 });
+  });
+}
+
+
 
   
-}
 

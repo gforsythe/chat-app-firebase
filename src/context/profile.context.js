@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db, messaging } from '../misc/firebase';
+import { auth, db, messaging,  } from '../misc/firebase';
 import firebase from 'firebase/app';
 
 export const isOfflineForDatabase = {
@@ -58,7 +58,9 @@ export const ProfileProvider = ({ children }) => {
 
         if (messaging && Notification.permission === 'granted') {
           try {
-            const currentToken = await messaging.getToken();
+            const currentToken = await messaging.getToken({
+              vapidKey:process.env.REACT_APP_FIREBASE_CLOUD_API_KEY
+            });
             if (currentToken) {
               await db.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid);
 
