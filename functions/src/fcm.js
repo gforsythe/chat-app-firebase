@@ -31,7 +31,7 @@ exports.sendFCM = functions.https.onCall(async (data, context) => {
       title: `${title} (${roomData.name})`,
       body: message
     },
-    tokens: registrationTokens,
+    tokens,
   };
 
   const batchResponse = await messaging.sendMulticast(fcmMessage);
