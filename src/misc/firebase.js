@@ -4,6 +4,8 @@ import 'firebase/auth';
 import 'firebase/database';
 import 'firebase/storage';
 import 'firebase/messaging';
+import 'firebase/functions';
+import { isLocalhost } from './helpers';
 
 // TODO: Add SDKs for Firebase products that you want to use
 // https://firebase.google.com/docs/web/setup#available-libraries
@@ -23,10 +25,11 @@ const app = firebase.initializeApp(firebaseConfig);
 export const auth = app.auth();
 export const db = app.database();
 export const storage = app.storage();
+export const functions = app.functions('europe-west3');
 
 export const messaging = firebase.messaging.isSupported() ? app.messaging() : null;
 
-if(messaging){
+if (messaging) {
   messaging.onMessage(({ notification }) => {
     const { title, body } = notification;
     Toast.info({ title, description: body, duration: 0 });
@@ -35,5 +38,9 @@ if(messaging){
 
 
 
-  
 
+
+if (isLocalhost) {
+  functions.useEmulator('localhost',5001);
+
+}

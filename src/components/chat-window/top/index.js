@@ -5,6 +5,7 @@ import { Link } from 'react-router-dom';
 import { useMediaQuery } from '../../../misc/custom-hooks';
 import RoomInfoBtnModal from './RoomInfoBtnModal';
 import EditRoomBtnDrawer from './EditRoomBtnDrawer';
+import FcmBtnModal from './FcmBtnModal';
 
 function Top() {
   const name = useCurrentRoom(v => v.name);
@@ -23,7 +24,8 @@ function Top() {
 
       </div>
       <div className='d-flex justify-content-between align-items-center'>
-        <span>todo</span>
+        {isAdmin && <FcmBtnModal/> }
+        
         <RoomInfoBtnModal/>
       </div>
     </div>
