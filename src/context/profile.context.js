@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db, messaging,  } from '../misc/firebase';
+import { auth, db, fcmVapidKey, messaging, } from '../misc/firebase';
 import firebase from 'firebase/app';
 
 export const isOfflineForDatabase = {
@@ -21,7 +21,7 @@ export const ProfileProvider = ({ children }) => {
   useEffect(() => {
     let userRef;
     let userStatusRef;
-    let tokenRefreshUnsub;
+
     const authUnsubscribe = auth.onAuthStateChanged(async authObj => {
       if (authObj) {
         userStatusRef = db.ref(`/status/${authObj.uid}`);
@@ -56,10 +56,10 @@ export const ProfileProvider = ({ children }) => {
 
 
 
-        if (messaging && Notification.permission === 'granted') {
+        if (messaging) {
           try {
             const currentToken = await messaging.getToken({
-              vapidKey:process.env.REACT_APP_FIREBASE_CLOUD_API_KEY
+              vapidKey: fcmVapidKey
             });
             if (currentToken) {
               await db.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid);
@@ -69,18 +69,6 @@ export const ProfileProvider = ({ children }) => {
             console.log('an error occured while retrieving', err);
           }
         }
-        tokenRefreshUnsub = messaging.onTokenRefresh(async() => {
-          try {
-            const currentToken = await messaging.getToken();
-            if (currentToken) {
-              await db.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid);
-
-            }
-          } catch (err) {
-            console.log('an error occured while retrieving', err);
-          }
-        });
-
       } else {
         if (userRef) {
           userRef.off();
@@ -88,9 +76,7 @@ export const ProfileProvider = ({ children }) => {
         if (userStatusRef) {
           userStatusRef.off();
         }
-        if (tokenRefreshUnsub) {
-          tokenRefreshUnsub();
-        }
+      
         db.ref('.info/connected').off();
         setProfile(null);
         setIsLoading(false);
@@ -106,9 +92,7 @@ export const ProfileProvider = ({ children }) => {
       if (userStatusRef) {
         userStatusRef.off();
       }
-      if (tokenRefreshUnsub) {
-        tokenRefreshUnsub();
-      }
+
     };
   }, []);
   return (

@@ -9,3 +9,5 @@ admin.initializeApp({
 const { sendFcm } = require('./src/fcm');
 
 exports.sendFcm = sendFcm;
+
+
