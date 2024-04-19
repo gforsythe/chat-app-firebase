@@ -5,6 +5,8 @@ import { Link } from 'react-router-dom';
 import { useMediaQuery } from '../../../misc/custom-hooks';
 import RoomInfoBtnModal from './RoomInfoBtnModal';
 import EditRoomBtnDrawer from './EditRoomBtnDrawer';
+import FcmBtnModal from './FcmBtnModal';
+import AskFcmBtnModal from './AskFcmBtnModal';
 
 function Top() {
   const name = useCurrentRoom(v => v.name);
@@ -18,12 +20,14 @@ function Top() {
           <span className='text-disappear'>{name}</span>
         </h4>
         <ButtonToolbar className='ws-nowrap'>
+          <AskFcmBtnModal/>
           {isAdmin && <EditRoomBtnDrawer/>}
           </ButtonToolbar>
 
       </div>
       <div className='d-flex justify-content-between align-items-center'>
-        <span>todo</span>
+        {isAdmin && <FcmBtnModal/> }
+        
         <RoomInfoBtnModal/>
       </div>
     </div>

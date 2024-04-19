@@ -29,7 +29,7 @@ function EditRoomBtnDrawer() {
   };
   const { isOpen, open, close } = useModalState();
   return (
-    <div>
+    <>
       <Button className="br-circle" size="sm" color="red" onClick={open}>A</Button>
       <Drawer full={isMobile} show={isOpen} onHide={close} placement="right">
         <Drawer.Header><Drawer.Title>Edit Room</Drawer.Title></Drawer.Header>
@@ -39,7 +39,7 @@ function EditRoomBtnDrawer() {
         </Drawer.Body>
         <Drawer.Footer><Button block onClick={close}>Close</Button></Drawer.Footer>
       </Drawer>
-    </div>
+    </>
   );
 }
 

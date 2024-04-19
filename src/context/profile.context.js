@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react';
-import { auth, db } from '../misc/firebase';
+import { auth, db, fcmVapidKey, messaging, } from '../misc/firebase';
 import firebase from 'firebase/app';
 
 export const isOfflineForDatabase = {
@@ -21,7 +21,8 @@ export const ProfileProvider = ({ children }) => {
   useEffect(() => {
     let userRef;
     let userStatusRef;
-    const authUnsubscribe = auth.onAuthStateChanged(authObj => {
+
+    const authUnsubscribe = auth.onAuthStateChanged(async authObj => {
       if (authObj) {
         userStatusRef = db.ref(`/status/${authObj.uid}`);
 
@@ -52,6 +53,22 @@ export const ProfileProvider = ({ children }) => {
               userStatusRef.set(isOnlineForDatabase);
             });
         });
+
+
+
+        if (messaging) {
+          try {
+            const currentToken = await messaging.getToken({
+              vapidKey: fcmVapidKey
+            });
+            if (currentToken) {
+              await db.ref(`/fcm_tokens/${currentToken}`).set(authObj.uid);
+
+            }
+          } catch (err) {
+            console.log('an error occured while retrieving', err);
+          }
+        }
       } else {
         if (userRef) {
           userRef.off();
@@ -59,6 +76,7 @@ export const ProfileProvider = ({ children }) => {
         if (userStatusRef) {
           userStatusRef.off();
         }
+      
         db.ref('.info/connected').off();
         setProfile(null);
         setIsLoading(false);
@@ -74,6 +92,7 @@ export const ProfileProvider = ({ children }) => {
       if (userStatusRef) {
         userStatusRef.off();
       }
+
     };
   }, []);
   return (
