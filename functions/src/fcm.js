@@ -1,71 +1,80 @@
-
-const functions = require('firebase-functions');
-const admin = require('firebase-admin');
+/**
+ * Sends an FCM message to the specified chat room.
+ * @param {Object} data - The data object containing chatId, title, and message.
+ * @param {Object} context -
+ * The context object containing information about the authenticated user.
+ * @returns {Promise<boolean>}
+ *  A promise that resolves to true if the message is sent successfully.
+ */
+const functions = require("firebase-functions");
+const admin = require("firebase-admin");
 
 const database = admin.database();
 const messaging = admin.messaging();
-
 exports.sendFcm = functions
-  .region('europe-west3')
-  .https.onCall(async (data, context) => {
-    checkIfAuth(context);
+    .region("europe-west3")
+    .https.onCall(async (data, context) => {
+      checkIfAuth(context);
 
-    const { chatId, title, message } = data;
+      const {chatId, title, message} = data;
 
-    const roomSnap = await database.ref(`/rooms/${chatId}`).once('value');
+      const roomSnap = await database.ref(`/rooms/${chatId}`)
+          .once("value");
 
-    if (!roomSnap.exists()) {
-      return false;
-    }
+      if (!roomSnap.exists()) {
+        return false;
+      }
 
-    const roomData = roomSnap.val();
+      const roomData = roomSnap.val();
 
-    checkIfAllowed(context, transformToArr(roomData.admins));
+      checkIfAllowed(context, transformToArr(roomData.admins));
 
-    const fcmUsers = transformToArr(roomData.fcmUsers);
-    const userTokensPromises = fcmUsers.map(uid => getUserTokens(uid));
-    const userTokensResult = await Promise.all(userTokensPromises);
+      const fcmUsers = transformToArr(roomData.fcmUsers);
+      const userTokensPromises = fcmUsers.map((uid) => getUserTokens(uid));
+      const userTokensResult = await Promise.all(userTokensPromises);
 
-    const tokens = userTokensResult.reduce(
-      (accTokens, userTokens) => [...accTokens, ...userTokens],
-      []
-    );
+      const tokens = userTokensResult.reduce(
+          (accTokens, userTokens) => [...accTokens, ...userTokens],
+          [],
+      );
 
-    if (tokens.length === 0) {
-      return false;
-    }
+      if (tokens.length === 0) {
+        return false;
+      }
 
-    const fcmMessage = {
-      notification: {
-        title: `${title} (${roomData.name})`,
-        body: message,
-      },
-      tokens,
-    };
+      const fcmMessage = {
+        notification: {
+          title: `${title} (${roomData.name})`,
+          body: message,
+        },
+        tokens,
+      };
 
-    const batchResponse = await messaging.sendMulticast(fcmMessage);
-    const failedTokens = [];
+      const batchResponse = await messaging
+          .sendMulticast(fcmMessage);
+      const failedTokens = [];
 
-    if (batchResponse.failureCount > 0) {
-      batchResponse.responses.forEach((resp, idx) => {
-        if (!resp.success) {
-          failedTokens.push(tokens[idx]);
-        }
-      });
-    }
+      if (batchResponse.failureCount > 0) {
+        batchResponse.responses.forEach((resp, idx) => {
+          if (!resp.success) {
+            failedTokens.push(tokens[idx]);
+          }
+        });
+      }
 
-    const removePromises = failedTokens.map(token =>
-      database.ref(`/fcm_tokens/${token}`).remove()
-    );
+      const removePromises = failedTokens.map((token) =>
+        database.ref(`/fcm_tokens/${token}`).remove(),
+      );
 
-    return Promise.all(removePromises).catch(err => err.message);
-  });
+      return Promise.all(removePromises)
+          .catch((err) => err.message);
+    });
 
 function checkIfAuth(context) {
   if (!context.auth) {
     throw new functions.https.HttpsError(
-      'unauthenticated',
-      'You have to be signed in'
+        "unauthenticated",
+        "You have to be signed in",
     );
   }
 }
@@ -73,8 +82,8 @@ function checkIfAuth(context) {
 function checkIfAllowed(context, chatAdmins) {
   if (!chatAdmins.includes(context.auth.uid)) {
     throw new functions.https.HttpsError(
-      'unauthenticated',
-      'Restricted access'
+        "unauthenticated",
+        "Restricted access",
     );
   }
 }
@@ -85,10 +94,10 @@ function transformToArr(snapVal) {
 
 async function getUserTokens(uid) {
   const userTokensSnap = await database
-    .ref('/fcm_tokens')
-    .orderByValue()
-    .equalTo(uid)
-    .once('value');
+      .ref("/fcm_tokens")
+      .orderByValue()
+      .equalTo(uid)
+      .once("value");
 
   if (!userTokensSnap.hasChildren()) {
     return [];

@@ -10,7 +10,12 @@
       ".read": "auth !== null",
       "$room_id": {
         ".read": "auth !== null",
-        ".write": "!data.exists() || data.child('admins').child(auth.uid).val() === true",
+        ".write": "!data.exists() || data.child('admins').child(auth.uid).val() == true",
+        "fcmUsers": {
+          "$user_id": {
+            ".write": "$user_id === auth.uid"
+          }
+        },
         "lastMessage": {
           ".write": "auth !== null"
         }
@@ -30,9 +35,9 @@
         ".read": "auth !== null",
         ".write": "$user_id === auth.uid"
       }
-    },    
+    },
     "fcm_tokens": {
-            ".indexOn": ".value",
+      ".indexOn": ".value",
       "$token_id": {
         ".read": false,
         ".write": "newData.val() === auth.uid"
